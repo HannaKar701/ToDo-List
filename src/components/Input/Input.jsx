@@ -13,6 +13,7 @@ const InputComponent = ({ arrList, setArrList }) => {
             title: task,
         };
         setArrList([...arrList, newTask]);
+        setTask('');
     };
     return (
         <ConfigProvider
