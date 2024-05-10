@@ -4,6 +4,8 @@ import { Button, Space, Input, ConfigProvider } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { useState } from 'react';
 
+import { constants } from '../../constants/constants';
+
 const InputComponent = ({ arrList, setArrList }) => {
     const [task, setTask] = useState('');
     const changeTask = (event) => setTask(event.target.value);
@@ -39,10 +41,10 @@ const InputComponent = ({ arrList, setArrList }) => {
                     value={task}
                     onChange={changeTask}
                     style={{ marginBottom: '50px' }}
-                    placeholder="What is the task today?"
+                    placeholder={constants.taskInputPlaceholder}
                 />
                 <Button onClick={() => send()} type="primary" size="medium">
-                    Add task
+                    {constants.buttonAddTask}
                 </Button>
             </Space.Compact>
         </ConfigProvider>

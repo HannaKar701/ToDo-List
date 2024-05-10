@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import { Button, Space, Input, ConfigProvider } from 'antd';
-
-import editIcon from '../../assets/edit.svg';
-import deleteIcon from '../../assets/delete.svg';
-
-import './index.css';
 import { useState } from 'react';
 import { useRef, useEffect } from 'react';
+
+import { constants } from '../../constants/constants';
+
+import './index.css';
+import editIcon from '../../assets/edit.svg';
+import deleteIcon from '../../assets/delete.svg';
 
 const List = ({ task, arrList, setArrList }) => {
     const taskText = task.title;
@@ -57,7 +58,7 @@ const List = ({ task, arrList, setArrList }) => {
                         }}>
                         <Input ref={link} value={editedTask} onChange={handleChange} />
                         <Button onClick={() => handleEdit()} type="primary" size="medium">
-                            Update
+                            {constants.buttonEditTask}
                         </Button>
                     </Space.Compact>
                 </ConfigProvider>
