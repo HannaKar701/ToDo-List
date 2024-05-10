@@ -30,3 +30,9 @@ img {
 img:hover {
     cursor: pointer;
 }
+
+@media (max-width: 770px) {
+    p {
+        width: 60%;
+    }
+}
