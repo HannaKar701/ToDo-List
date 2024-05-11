@@ -17,6 +17,13 @@ const InputComponent = ({ arrList, setArrList }) => {
         setArrList([...arrList, newTask]);
         setTask('');
     };
+
+    const pressButtonCreateTask = (event) => {
+        if (event.key === 'Enter') {
+            send();
+        }
+    };
+
     return (
         <ConfigProvider
             theme={{
@@ -40,6 +47,7 @@ const InputComponent = ({ arrList, setArrList }) => {
                 <Input
                     value={task}
                     onChange={changeTask}
+                    onKeyDown={pressButtonCreateTask}
                     style={{ marginBottom: '50px' }}
                     placeholder={constants.taskInputPlaceholder}
                 />
