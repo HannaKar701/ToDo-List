@@ -63,17 +63,15 @@ const List = ({ task, arrList, setArrList }) => {
                     </Space.Compact>
                 </ConfigProvider>
             ) : (
-                <p
-                    style={{
-                        textDecoration: isDone ? 'line-through' : 'none',
-                        color: isDone ? '#73bd99' : 'white',
-                    }}
-                    onClick={() => setIsDone(!isDone)}>
-                    {editedTask}
-                </p>
-            )}
-            {isEditing === false && (
                 <>
+                    <p
+                        style={{
+                            textDecoration: isDone ? 'line-through' : 'none',
+                            color: isDone ? '#73bd99' : 'white',
+                        }}
+                        onClick={() => setIsDone(!isDone)}>
+                        {editedTask}
+                    </p>
                     <img src={editIcon} alt="Edit" onClick={handleEdit} />
                     <img src={deleteIcon} alt="Delete" onClick={deleteTask} />
                 </>
