@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Button, Space, Input, ConfigProvider } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useRef, useEffect } from 'react';
 
@@ -15,12 +16,18 @@ const List = ({ task, arrList, setArrList }) => {
     const [isDone, setIsDone] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTask, setEditedTask] = useState(taskText);
+    const [originalTask, setOriginalTask] = useState(taskText);
 
     const handleChange = (event) => {
         setEditedTask(event.target.value);
     };
 
     const handleEdit = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const cancelEdit = () => {
+        setEditedTask(originalTask);
         setIsEditing(!isEditing);
     };
 
@@ -32,6 +39,7 @@ const List = ({ task, arrList, setArrList }) => {
     useEffect(() => {
         if (isEditing) {
             link.current.focus();
+            setOriginalTask(editedTask);
         }
     }, [isEditing]);
 
@@ -60,6 +68,12 @@ const List = ({ task, arrList, setArrList }) => {
                         <Button onClick={() => handleEdit()} type="primary" size="medium">
                             {constants.buttonEditTask}
                         </Button>
+                        <Button
+                            type="primary"
+                            icon={<CloseOutlined />}
+                            danger
+                            onClick={() => cancelEdit()}
+                        />
                     </Space.Compact>
                 </ConfigProvider>
             ) : (
