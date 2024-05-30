@@ -1,0 +1,9 @@
+:root {
+    --button-disabled-background: #f5f5f5;
+    --button-disabled-text-color: #999999;
+}
+
+.ant-btn[disabled] {
+    background-color: var(--button-disabled-background) !important;
+    color: var(--button-disabled-text-color) !important;
+}

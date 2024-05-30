@@ -1,0 +1,48 @@
+:root {
+    --toastify-color-success: #75ba9b;
+    --toastify-toast-width: 700px;
+    --toastify-text-color-light: #0e101c;
+}
+
+.registration-form__wrapper {
+    background-color: #1a1a40;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 30px;
+    border-radius: 6px;
+}
+
+.registration-form {
+    width: 70%;
+}
+
+.label-white {
+    color: white;
+}
+
+.registration-form__button {
+    width: 100%;
+    margin-top: 10px;
+    background-color: #75ba9b;
+    font-weight: 700;
+}
+
+.registration-form__text {
+    text-align: center;
+    font-weight: 600;
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+.registration-form__text > a {
+    text-decoration: underline;
+}
+
+@media (max-width: 770px) {
+    .registration-form__wrapper {
+        width: 100%;
+        margin-top: 50px;
+    }
+}

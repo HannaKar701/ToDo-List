@@ -31,6 +31,10 @@ img:hover {
     cursor: pointer;
 }
 
+.edit-task__error {
+    margin-bottom: 20px;
+}
+
 @media (max-width: 770px) {
     p {
         width: 60%;

@@ -1,21 +1,67 @@
 /* eslint-disable react/prop-types */
 
 import { Button, Space, Input, ConfigProvider } from 'antd';
-import { v4 as uuidv4 } from 'uuid';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { constants } from '../../constants/constants';
 
-const InputComponent = ({ arrList, setArrList }) => {
+import './index.css';
+
+function InputComponent({ updateTaskList }) {
     const [task, setTask] = useState('');
+    const token = localStorage.getItem('token');
+    const apiLogin = 'https://todo-redev.herokuapp.com/api/todos';
+    const inputLink = useRef(null);
+
     const changeTask = (event) => setTask(event.target.value);
+
     const send = () => {
         const newTask = {
-            id: uuidv4(),
             title: task,
         };
-        setArrList([...arrList, newTask]);
-        setTask('');
+
+        return fetch(apiLogin, {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(newTask),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('HTTP Error ' + response.status);
+                }
+            })
+            .then(() => {
+                fetch('https://todo-redev.herokuapp.com/api/todos', {
+                    method: 'GET',
+                    headers: {
+                        accept: 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('HTTP Error ' + response.status);
+                        }
+                    })
+                    .then((data) => {
+                        updateTaskList(data);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                setTask('');
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
     const pressButtonCreateTask = (event) => {
@@ -23,6 +69,8 @@ const InputComponent = ({ arrList, setArrList }) => {
             send();
         }
     };
+
+    useEffect(() => inputLink.current.focus(), []);
 
     return (
         <ConfigProvider
@@ -45,18 +93,25 @@ const InputComponent = ({ arrList, setArrList }) => {
                     width: '65%',
                 }}>
                 <Input
+                    ref={inputLink}
                     value={task}
                     onChange={changeTask}
                     onKeyDown={pressButtonCreateTask}
                     style={{ marginBottom: '50px' }}
                     placeholder={constants.taskInputPlaceholder}
                 />
-                <Button onClick={() => send()} type="primary" size="medium">
-                    {constants.buttonAddTask}
-                </Button>
+                {task === '' ? (
+                    <Button type="primary" size="medium" disabled>
+                        {constants.buttonAddTask}
+                    </Button>
+                ) : (
+                    <Button onClick={() => send()} type="primary" size="medium">
+                        {constants.buttonAddTask}
+                    </Button>
+                )}
             </Space.Compact>
         </ConfigProvider>
     );
-};
+}
 
 export default InputComponent;
