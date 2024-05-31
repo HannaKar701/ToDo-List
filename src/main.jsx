@@ -3,10 +3,10 @@ import App from './App.jsx';
 import ErrorPage from './components/ErrorPage/ErrorPage';
 import RegistrationForm from './components/Regisration form/RegistrationForm.jsx';
 import Login from './components/Login/Login.jsx';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
     {
         path: '/',
         element: <Login />,
