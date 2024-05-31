@@ -24,7 +24,7 @@ export const constants = {
     ageRequired: 'Please input your age!',
     ageValidation: 'Please input the correct age!',
     agePlaceholder: '23',
-    successfullSubmit: 'Successfull submit',
+    successfullSubmit: 'The account was created successfully.',
     registrationFormTitle: 'Registration form',
     usernameLabel: 'Username',
     nameRequired: 'Please input your name!',
