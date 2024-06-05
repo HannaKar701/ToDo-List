@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useRef, useEffect } from 'react';
 
 import { constants } from '../../constants/constants';
+import { fetchData } from '../../utils/fetchData';
+import api from '../../api/index';
 
 import './index.css';
 import editIcon from '../../assets/edit.svg';
@@ -12,80 +14,10 @@ import deleteIcon from '../../assets/delete.svg';
 
 function List({ task, updateTaskList }) {
     const { title: taskText, id: taskId, isCompleted: taskCompleted } = task;
-    const taskAPI = `https://todo-redev.herokuapp.com/api/todos/${taskId}`;
-    const getAPI = 'https://todo-redev.herokuapp.com/api/todos';
-    const isCompletedAPI = `https://todo-redev.herokuapp.com/api/todos/${taskId}/isCompleted`;
-    const token = localStorage.getItem('token');
     const link = useRef(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTask, setEditedTask] = useState(taskText);
     const [originalTask, setOriginalTask] = useState(taskText);
-
-    const fetchAPI = (link, method, data = null) => {
-        return fetch(link, {
-            method: method,
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${token}`,
-                'Content-Type': method === 'PATCH' ? 'application/json' : undefined,
-            },
-            body: data ? JSON.stringify(data) : undefined,
-        })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('HTTP Error ' + response.status);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
-
-    const handleChange = (event) => setEditedTask(event.target.value);
-
-    const handleEdit = () => setIsEditing((prevState) => !prevState);
-
-    const saveEdit = () => {
-        const data = {
-            title: editedTask,
-        };
-
-        if (editedTask !== '') {
-            return fetchAPI(taskAPI, 'PATCH', data)
-                .then(() => {
-                    return fetchAPI(getAPI, 'GET');
-                })
-                .then((data) => {
-                    setIsEditing((prevState) => !prevState);
-                    updateTaskList(data);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-
-        return data;
-    };
-
-    const cancelEdit = () => {
-        setEditedTask(originalTask);
-        setIsEditing(!isEditing);
-    };
-
-    const deleteTask = () => {
-        return fetchAPI(taskAPI, 'DELETE')
-            .then(() => {
-                return fetchAPI(getAPI, 'GET');
-            })
-            .then((data) => {
-                updateTaskList(data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
 
     useEffect(() => {
         if (isEditing) {
@@ -94,17 +26,46 @@ function List({ task, updateTaskList }) {
         }
     }, [isEditing]);
 
-    const setIsCompleted = () => {
-        return fetchAPI(isCompletedAPI, 'PATCH')
-            .then(() => {
-                return fetchAPI(getAPI, 'GET');
-            })
-            .then((data) => {
-                updateTaskList(data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    const handleChange = (event) => setEditedTask(event.target.value);
+
+    const handleEdit = () => setIsEditing((prevState) => !prevState);
+
+    const saveEdit = async () => {
+        const data = {
+            title: editedTask,
+        };
+
+        if (editedTask !== '') {
+            try {
+                await api.patch(`/api/todos/${taskId}`, data);
+                setIsEditing((prevState) => !prevState);
+            } catch (error) {
+                console.error('Ошибка при обновлении данных:', error);
+            }
+        }
+    };
+
+    const cancelEdit = () => {
+        setEditedTask(originalTask);
+        setIsEditing(!isEditing);
+    };
+
+    const deleteTask = async () => {
+        try {
+            await api.delete(`/api/todos/${taskId}`);
+            fetchData(updateTaskList);
+        } catch (error) {
+            console.error('Ошибка при удалении задачи:', error);
+        }
+    };
+
+    const setIsCompleted = async () => {
+        try {
+            await api.patch(`/api/todos/${taskId}/isCompleted`);
+            fetchData(updateTaskList);
+        } catch (error) {
+            console.error('Ошибка при обновлении данных:', error);
+        }
     };
 
     return (

@@ -1,36 +1,22 @@
 import { ConfigProvider, Button, Form, Input } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { constants } from '../../constants/constants';
+import api from '../../api/index';
 
 import './index.css';
 
 function Login() {
     const apiLogin = 'https://todo-redev.herokuapp.com/api/auth/login';
     const navigate = useNavigate();
-    const sendLoginForm = (data) => {
-        return fetch(apiLogin, {
-            method: 'POST',
-            headers: {
-                accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        }).then((response) => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('HTTP Error ' + response.status);
-            }
-        });
-    };
 
-    const onFinish = (values) => {
-        sendLoginForm(values)
-            .then((data) => {
-                localStorage.setItem('token', data.token);
-                navigate('/todo-list');
-            })
-            .catch((error) => console.log(error));
+    const onFinish = async (data) => {
+        try {
+            const response = await api.post('/api/auth/login', data);
+            localStorage.setItem('token', response.data.token);
+            navigate('/todo-list');
+        } catch (error) {
+            console.log('Ошибка при попытке войти в аккаунт:', error);
+        }
     };
 
     return (

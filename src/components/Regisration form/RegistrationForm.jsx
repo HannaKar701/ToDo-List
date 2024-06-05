@@ -3,6 +3,7 @@ import { ConfigProvider, Button, Form, Input, InputNumber, Select } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { constants } from '../../constants/constants';
+import api from '../../api/index';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
@@ -10,17 +11,15 @@ import './index.css';
 function RegistrationForm() {
     const formRef = useRef(null);
     const inputRef = useRef(null);
-    const apiRegister = 'https://todo-redev.herokuapp.com/api/users/register';
 
-    const sendRegistrationForm = (user) => {
-        return fetch(apiRegister, {
-            method: 'POST',
-            headers: {
-                accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user),
-        });
+    const sendRegistrationForm = async (user) => {
+        try {
+            await api.post('/api/users/register', user);
+            formRef.current.resetFields();
+            toast.success(constants.successfullSubmit);
+        } catch (error) {
+            console.log('Ошибка регистрации', error);
+        }
     };
 
     const validatePassword = (_, value) => {
@@ -55,12 +54,6 @@ function RegistrationForm() {
         return Promise.resolve();
     };
 
-    const onFinish = (values) => {
-        sendRegistrationForm(values);
-        formRef.current.resetFields();
-        toast.success(constants.successfullSubmit);
-    };
-
     useEffect(() => inputRef.current.focus(), []);
 
     return (
@@ -91,7 +84,7 @@ function RegistrationForm() {
                         initialValues={{
                             remember: true,
                         }}
-                        onFinish={onFinish}
+                        onFinish={sendRegistrationForm}
                         autoComplete="off">
                         <Form.Item
                             label={constants.usernameLabel}
