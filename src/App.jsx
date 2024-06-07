@@ -5,13 +5,12 @@ import List from './components/List/List';
 import { Link } from 'react-router-dom';
 import { constants } from './constants/constants';
 import api from './api/index';
+import { clearToken } from './utils/localStorageUtils';
 
 import './App.css';
 
 function App() {
     const [taskList, setTaskList] = useState([]);
-
-    const clearToken = () => localStorage.removeItem('token');
 
     const updateTaskList = (data) => setTaskList(data);
 

@@ -1,18 +1,18 @@
 import { ConfigProvider, Button, Form, Input } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { constants } from '../../constants/constants';
+import { setToken } from '../../utils/localStorageUtils';
 import api from '../../api/index';
 
 import './index.css';
 
 function Login() {
-    const apiLogin = 'https://todo-redev.herokuapp.com/api/auth/login';
     const navigate = useNavigate();
 
     const onFinish = async (data) => {
         try {
             const response = await api.post('/api/auth/login', data);
-            localStorage.setItem('token', response.data.token);
+            setToken(response.data.token);
             navigate('/todo-list');
         } catch (error) {
             console.log('Ошибка при попытке войти в аккаунт:', error);
